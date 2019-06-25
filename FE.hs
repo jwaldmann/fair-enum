@@ -39,7 +39,7 @@ state0 w = State
   { distributions = replicate (fromIntegral w) M.empty , total = 0, history = [] }
 
 state :: ( Ord a, Num w) => Natural -> [[a]] -> State a w
-state w xs = foldr push (state0 w) xs
+state w xs = foldl (flip push) (state0 w) xs
 
 push :: (Ord a, Num w) => [a] -> State a w -> State a w
 push x s = s
@@ -93,8 +93,8 @@ solutions w h =
 
 permutations :: [a] -> [[a]]
 permutations [] = [[]]
-permutations (x:xs) = do
-  zs <- permutations xs
-  (a,b) <- zip (inits zs) (tails zs)
-  return $ a ++ (x : b)
+permutations xs = do
+  (pre, this:post) <- zip (inits xs) (tails xs)
+  zs <- permutations $ pre <> post
+  return $ this : zs
   
