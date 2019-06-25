@@ -91,10 +91,4 @@ solutions w h =
   in  top $ pack goal
 
 
-permutations :: [a] -> [[a]]
-permutations [] = [[]]
-permutations xs = do
-  (pre, this:post) <- zip (inits xs) (tails xs)
-  zs <- permutations $ pre <> post
-  return $ this : zs
   
