@@ -26,30 +26,60 @@ by projecting to a component is  d-fair.
 
 # Examples:
 
-The sequence
 
-    [[0,0,1,1],[0,2,0,0],[1,1,0,0],[0,0,0,2],[1,0,1,0],[0,0,2,0],[0,1,0,1],[1,0,0,1],[2,0,0,0],[0,1,1,0]]
+3/4-fair:
 
-is 4/5-fair.
+    [[1,1,1],[2,2,2],[3,3,3],[4,4,4],[1,1,2],[2,2,1],[3,3,4],[4,4,3]
+    ,[1,1,3],[2,2,4],[3,3,1],[4,4,2],[1,1,4],[2,2,3],[3,3,2],[4,4,1]
+    ,[1,2,1],[2,1,2],[3,4,3],[4,3,4],[1,2,2],[2,1,1],[3,4,4],[4,3,3]
+    ,[1,2,3],[2,1,4],[3,4,1],[4,3,2],[1,2,4],[2,1,3],[3,4,2],[4,3,1]
+    ,[1,3,1],[2,4,2],[3,1,3],[4,2,4],[1,3,2],[2,4,1],[3,1,4],[4,2,3]
+    ,[1,3,3],[2,4,4],[3,1,1],[4,2,2],[1,3,4],[2,4,3],[3,1,2],[4,2,1]
+    ,[1,4,1],[2,3,2],[3,2,3],[4,1,4],[1,4,2],[2,3,1],[3,2,4],[4,1,3]
+    ,[1,4,3],[2,3,4],[3,2,1],[4,1,2],[1,4,4],[2,3,3],[3,2,2],[4,1,1]]
 
-The sequence
+3/4-fair:
 
-    [[0,0,3],[1,1,1],[0,3,0],[1,0,2],[0,2,1],[2,1,0],[1,2,0],[2,0,1],[0,1,2],[3,0,0]]
+    [[1,2,3,4],[2,1,4,3],[3,4,1,2],[4,3,2,1],[1,2,4,3],[2,1,3,4]
+    ,[3,4,2,1],[4,3,1,2],[1,3,2,4],[2,4,1,3],[3,1,4,2],[4,2,3,1]
+    ,[1,3,4,2],[2,4,3,1],[3,1,2,4],[4,2,1,3],[1,4,2,3],[2,3,1,4]
+    ,[3,2,4,1],[4,1,3,2],[1,4,3,2],[2,3,4,1],[3,2,1,4],[4,1,2,3]]
 
-is 1-fair.
+13/15-fair:
+
+    [[0,1,3],[1,2,1],[4,0,0],[2,0,2],[0,3,1],[2,2,0],[3,1,0],[1,1,2]
+    ,[0,0,4],[1,3,0],[3,0,1],[0,2,2],[0,4,0],[1,0,3],[2,1,1]]
+
+
 
 # Properties
 
-Let S(w,h) = w-tuples of natural numbers with sum h.
+For each sequence  s, there should be some  d
+such that with high probability,
+a random permutation of  s  is  d-fair.
 
-Conjecture: S(w,h) has a 1-fair permutation.
+Is  d  always equal to  1?
 
-Conjecture: With high probability, a random permutation of S(w,h) is 1-fair.
+(Except perhaps maybe for such  s  that have too few
+elements)
+
+By the pigeonhole principle,
+there are concrete permutations that are d-fair
+(for the same d).
+
+We can instantiate this for several families of
+sequences.
+
+
+* w-tuples of natural numbers [1 .. w],
+* permutations of [1..w]
+* w-tuples of natural numbers with sum h
+
 
 # Challenge
 
-find a deterministic online algorithm that prints a 1-fair permutation of S(w,h),
-i.e., with O(1) work for each element.
+find a deterministic online algorithm that prints a 1-fair permutation of
+the respective sequence, i.e., with O(1) work for each element.
 
 
 # Possible modifications:
@@ -60,10 +90,18 @@ i.e., with O(1) work for each element.
 
 # Implementation
 
-(Haskell source file in this project) `FE w h`
-does a branch-and-bound tree search to find the fairest permutation
-of S(w,h). It starts with the lexicographically increasing permutation (I think?)
+(Haskell source file in this project) 
+Branch-and-bound tree search to find the fairest permutation of a sequence.
+Arguments:
+
+```
+./FE tuples 3 4   -- achieves 3/4-fairness
+./FE perms 4      -- alsoe 3/4-fair
+./FE tier 3 4     -- 13/15-fair
+```
+
+Output see "Examples2 above.
+
+It starts with the lexicographically increasing permutation (I think?)
 and then searches for another one that is fairer (i.e., fulfills the
 above requirement for smaller  d), until no more improvement is possible.
-The above examples can be obtained with `FE 4 2` and `FE 3 3`.
-Some more tests confirm the conjecture (1-fairness) for small values of `w` and `h`.
