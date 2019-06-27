@@ -1,20 +1,35 @@
 -- | https://github.com/rudymatela/leancheck/issues/14#issuecomment-504990199
 
+{-# language LambdaCase #-}
+
 import Numeric.Natural
 import Data.Ratio
 import Data.List (inits, tails)
-import Control.Monad (guard, forM_)
+import Control.Monad (guard, forM_, replicateM)
 import qualified Data.Map.Strict as M
 import qualified Data.Sequence as Q
 import System.Environment
 
-main = getArgs >>= \ [ w, h] -> do
-  solve (read w) (read h)
+main = getArgs >>= \ case
+  [ "tier", w, h] -> solve $ tier (read w) (read h)
+  [ "tuples", w, h] -> solve $ tuples (read w) (read h)
+  [ "perms", w ] -> solve $ perms (read w)
 
 test = do
-  solve 4 4
-  
+  solve $ perms 4
 
+perms w = permutations [1..w]
+
+permutations :: [a] -> [[a]]
+permutations [] = [[]]
+permutations xs = do
+  (pre,this:post) <- zip (inits xs)(tails xs)
+  (this :) <$> permutations (pre <> post)
+
+tuples :: Natural -> Natural -> [[Natural]]
+tuples w h = replicateM (fromIntegral w) [1..h]
+
+-- | all lists of natural numbers of length w and sum h
 tier :: Natural -> Natural -> [[Natural]]
 tier 1 height = [[height]]
 tier width height | width > 1 = do
@@ -60,12 +75,12 @@ distance s t | total s <= total t =
 	       $ M.map (negate . (/ tt)) e
 	return $ delta * ts
 
-solve w h = do
-  mapM_ print $ map (\(v,s) -> (v, reverse $ history s)) $ solutions w h
+solve ts = do
+  mapM_ print $ map (\(v,s) -> (v, reverse $ history s)) $ solutions ts
 
-solutions :: Natural -> Natural -> [ (Rational, State Natural Rational) ]
-solutions w h =
-  let ts = tier w h
+solutions :: [[Natural]] -> [ (Rational, State Natural Rational) ]
+solutions ts =
+  let w = fromIntegral $ length $ head ts
       goal = state w ts
       eval :: State Natural Rational -> Rational
       eval s = distance s goal
