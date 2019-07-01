@@ -121,3 +121,8 @@ The lexicographically smallest less-than-1-fair arrangement of all permutations 
 ]
 ```
 
+There is a less-than-1-fair arrangement of all permutations of [1..8] -
+
+but possibly not for permutaions for 5, 7, .. elements.
+
+
