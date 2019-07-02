@@ -20,9 +20,19 @@ in  p (the prefix) and in  x (the full sequence),
 and their difference should become smaller as  p  gets longer
 (that's why we divide by |p|)
 
+Alternative explanation: if we multiply by `|p|`, we get
+
+    abs (|p|_a - |p| * |x|_a / |x|) <= d
+    
+Here, `|p| * |x|_a / |x|` is the number of `a`
+that a prefix of length `|p|` should have,
+and the actual value `|p|_a` should differ by at most `d`.
+So in the best case, we expect `d=1` (roughly).
+
 Definition: A finite sequence  x  of elements of  a cartesian product
 S = S1 x .. x Sk  is called  d-fair  if each sequence obtained
 by projecting to a component is  d-fair.
+
 
 # Examples:
 
